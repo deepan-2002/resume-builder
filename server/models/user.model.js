@@ -1,23 +1,37 @@
-const mongoose = require('mongoose');
-const bcrypt = require('bcryptjs');
+import { Schema, model } from "mongoose";
+import bcrypt from 'bcryptjs';
 
-const UserSchema = new mongoose.Schema({
-    name: { type: String, required: true },
-    email: { type: String, required: true, unique: true },
-    password: { type: String, required: true },
-});
-
-UserSchema.pre('save', async function(next) {
-    if (!this.isModified('password')) return next();
-    try {
-        const salt = await bcrypt.genSalt(10);
-        this.password = await bcrypt.hash(this.password, salt);
-        next();
-    } catch (err) {
-        next(err);
+const UserSchema = new Schema({
+    name: {
+        type: String,
+        required: true,
+        minlength: [3, "Name must contain atleast 3 Letters"],
+        match: [/^[A-Za-z\s]+$/, "Enter Valid Name"],
+    },
+    email: {
+        type: String,
+        required: true,
+        unique: true,
+        match: [/^\S+@\S+\.\S+$/, "Enter Valid Email"],
+    },
+    password: {
+        type: String,
+        required: true,
+        minlength: [6, "Password must contain atleast 6 characters"]
     }
-});
+})
 
-const User = mongoose.model('User', UserSchema);
+UserSchema.pre('save', async function (next) {
+    if (!this.isModified('password')) return next();
+    const salt = await bcrypt.genSalt(10);
+    this.password = await bcrypt.hash(this.password, salt);
+    next();
+})
 
-module.exports = User;
+UserSchema.methods.matchPassword = async function (enteredPassword) {
+    await bcrypt.compare(enteredPassword, this.password);
+}
+
+const User = model('User', UserSchema);
+
+export default User;

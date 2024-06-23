@@ -1,36 +1,37 @@
-const User = require("../models/user.model.js");
-const bcrypt = require('bcryptjs');
-const jwt = require('jsonwebtoken');
+import User from "../models/user.model.js";
+import jwt from "jsonwebtoken";
 
-const registerController = async (req, res) => {
-    const { name, email, password } = req.body;
+const generateToken = (id) => {
+    return jwt.sign({ id }, process.env.JWT_SECRET, { expiresIn: '7d' });
+}
+
+export const registerController = async (req, res) => {
     try {
-        let user = await User.findOne({ email });
-        if (user) return res.status(400).json({ message: "Email already exists" });
-        user = new User({ name, email, password });
+        const { name, email, password } = req.body;
+        const userExists = await User.findOne({ email });
+        if (userExists) return res.status(400).json({ msg: "User Already Exists" });
+
+        const user = new User({ name, email, password });
         await user.save();
-        res.status(201).json({ message: "User Created Successfully" });
+        res.status(201).json({ msg: "User Created" });
     } catch (err) {
         console.log(err);
-        res.status(500).json({ message: 'Failed Creating User' });
+        res.status(500).json({ msg: err.message });
     }
 }
 
-const loginController = async (req, res) => {
+export const loginController = async (req, res) => {
     try {
         const { email, password } = req.body;
         const user = await User.findOne({ email });
-        if (!user) return res.status(400).json({ message: "Email doesn't exists" });
-        const isMatch = await bcrypt.compare(password, user.password);
-        if (!isMatch) return res.status(400).json({ message: "Incorrect Password" });
 
-        const payload = { user: { id: user.id } };
-        const token = jwt.sign(payload, process.env.JWT_SECRET, { expiresIn: '7d' });
+        if (!user) return res.status(400).json({ msg: "User doesn't exists" });
+        if (!user.matchPassword(password)) return res.status(400).json({ msg: "Incorrect Password" });
 
-        res.json({ message: "Logged In", token });
+        const token = generateToken(user._id);
+        res.status(200).json({ msg: "Logged In", token });
     } catch (err) {
-        return res.status(500).json({ message: 'Server Error' });
+        console.log(err);
+        res.status(500).json({ msg: 'Server Error' });
     }
 }
-
-module.exports = { registerController, loginController };
