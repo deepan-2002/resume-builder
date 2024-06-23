@@ -9,14 +9,14 @@ export const registerController = async (req, res) => {
     try {
         const { name, email, password } = req.body;
         const userExists = await User.findOne({ email });
-        if (userExists) return res.status(400).json({ msg: "User Already Exists" });
+        if (userExists) return res.status(400).json({ message: "User Already Exists" });
 
         const user = new User({ name, email, password });
         await user.save();
-        res.status(201).json({ msg: "User Created" });
+        res.status(201).json({ message: "User Created" });
     } catch (err) {
         console.log(err);
-        res.status(500).json({ msg: err.message });
+        res.status(500).json({ message: err.message });
     }
 }
 
@@ -25,13 +25,13 @@ export const loginController = async (req, res) => {
         const { email, password } = req.body;
         const user = await User.findOne({ email });
 
-        if (!user) return res.status(400).json({ msg: "User doesn't exists" });
-        if (!user.matchPassword(password)) return res.status(400).json({ msg: "Incorrect Password" });
+        if (!user) return res.status(400).json({ message: "User doesn't exists" });
+        if (!(await user.matchPassword(password))) return res.status(400).json({ message: "Incorrect Password" });
 
         const token = generateToken(user._id);
-        res.status(200).json({ msg: "Logged In", token });
+        res.status(200).json({ message: "Logged In", token });
     } catch (err) {
         console.log(err);
-        res.status(500).json({ msg: 'Server Error' });
+        res.status(500).json({ message: 'Server Error' });
     }
 }
