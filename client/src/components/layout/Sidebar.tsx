@@ -9,13 +9,13 @@ import {
   Typography,
 } from '@mui/material';
 import DashboardOutlinedIcon from '@mui/icons-material/DashboardOutlined';
-import EditOutlinedIcon from '@mui/icons-material/EditOutlined';
 import StyleOutlinedIcon from '@mui/icons-material/StyleOutlined';
 import { NavLink, useLocation } from 'react-router-dom';
+import { BallotOutlined } from '@mui/icons-material';
 
 const links = [
   { label: 'Dashboard', to: '/', icon: <DashboardOutlinedIcon /> },
-  { label: 'Resume Editor', to: '/editor/1', icon: <EditOutlinedIcon /> },
+  { label: 'My Resumes', to: '/resumes', icon: <BallotOutlined /> },
   { label: 'Templates', to: '/templates', icon: <StyleOutlinedIcon /> },
 ];
 
@@ -45,17 +45,17 @@ const Sidebar = () => {
         }}
       >
         <Box>
-          <Typography variant="subtitle2" color="text.secondary">
-            Navigation
-          </Typography>
           <Typography variant="h6" color="text.primary">
-            Workspace
+            Resume Builder
+          </Typography>
+          <Typography variant="subtitle2" color="text.secondary">
+            Make your resume stand out
           </Typography>
         </Box>
         <Divider />
         <List disablePadding>
           {links.map((link) => {
-            const isActive = location.pathname.startsWith(link.to);
+            const isActive = link.to === '/' ? location.pathname === link.to : location.pathname.startsWith(link.to);
             return (
               <ListItemButton
                 key={link.to}

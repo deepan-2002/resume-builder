@@ -50,6 +50,8 @@ export interface Resume {
   content?: ResumeContent | null;
 }
 
+export type TemplateComponentKey = 'modern' | 'classic';
+
 export interface TemplateSummary {
   id: number;
   name: string;
@@ -57,5 +59,12 @@ export interface TemplateSummary {
   thumbnailUrl?: string | null;
   category?: string | null;
   isPremium: boolean;
+  componentKey?: TemplateComponentKey;
+}
+
+export interface CreateResumePayload {
+  title?: string;
+  templateId: number;
+  content?: ResumeContent;
 }
 

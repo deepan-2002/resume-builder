@@ -1,12 +1,12 @@
-import { Box, Paper, Stack, TextField, Typography } from '@mui/material';
+import { Box, Stack, Typography } from '@mui/material';
 import { useEffect, useMemo, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import EditorToolbar from '../components/resume/editor/EditorToolbar';
-import ResumePreview from '../components/resume/preview/ResumePreview';
 import useAutoSave from '../hooks/useAutoSave';
 import useResume from '../hooks/useResume';
 import type { ResumeContent, Theme } from '../types/resume.types';
 import { generatePdf } from '../utils/pdfGenerator';
+import Header from '../components/layout/Header';
 
 const defaultContent: ResumeContent = {
   summary: 'Highlight your top achievements and strengths here.',
@@ -15,13 +15,15 @@ const defaultContent: ResumeContent = {
 
 const ResumeEditor = () => {
   const params = useParams();
-  const resumeId = Number(params.id ?? '1');
+  const resumeId = Number(params.id);
   const { currentResume, setActiveResume } = useResume();
   const [content, setContent] = useState<ResumeContent>(defaultContent);
-  const [theme, setTheme] = useState<Theme>();
+  const [, setTheme] = useState<Theme>();
 
   useEffect(() => {
-    setActiveResume(resumeId);
+    if (resumeId) {
+      setActiveResume(resumeId);
+    }
   }, [resumeId, setActiveResume]);
 
   useEffect(() => {
@@ -33,10 +35,6 @@ const ResumeEditor = () => {
 
   useAutoSave(content, resumeId);
 
-  const handleSummaryChange = (
-    event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
-  ) => setContent((prev) => ({ ...prev, summary: event.target.value }));
-
   const placeholders = useMemo(
     () => ({
       title: currentResume?.title ?? 'Untitled resume',
@@ -45,41 +43,26 @@ const ResumeEditor = () => {
   );
 
   return (
-    <Stack spacing={4}>
-      <div>
-        <Typography variant="caption" color="text.secondary">
-          Editing
-        </Typography>
+    <Stack>
+      <Header canGoBack={true} title={resumeId ? "Edit Resume" : "Create Resume"} subtitle="Craft professional resumes with live preview and auto-save." />
+      <Stack spacing={4} padding={4}>
         <Typography variant="h4">{placeholders.title}</Typography>
-      </div>
+        
+        <EditorToolbar
+          onThemeChange={setTheme}
+          onExportPdf={() => currentResume && generatePdf(currentResume)}
+        />
 
-      <EditorToolbar
-        onThemeChange={setTheme}
-        onExportPdf={() => currentResume && generatePdf(currentResume)}
-      />
+        <Box
+          sx={{
+            display: 'grid',
+            gap: 4,
+            gridTemplateColumns: { xs: '1fr', lg: 'repeat(2, minmax(0, 1fr))' },
+          }}
+        >
 
-      <Box
-        sx={{
-          display: 'grid',
-          gap: 4,
-          gridTemplateColumns: { xs: '1fr', lg: 'repeat(2, minmax(0, 1fr))' },
-        }}
-      >
-        <Paper variant="outlined" sx={{ p: 3 }}>
-          <Typography variant="h6" gutterBottom>
-            Summary (auto-saves every 2s)
-          </Typography>
-          <TextField
-            multiline
-            minRows={8}
-            fullWidth
-            value={content.summary ?? ''}
-            onChange={handleSummaryChange}
-            placeholder="Describe your experience, strengths, and career goals."
-          />
-        </Paper>
-        <ResumePreview content={content} theme={theme} />
-      </Box>
+        </Box>
+      </Stack>
     </Stack>
   );
 };

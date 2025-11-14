@@ -1,8 +1,13 @@
 import { Paper } from '@mui/material';
-import { useMemo } from 'react';
+import { useMemo, type FC } from 'react';
 import ModernTemplate from '../templates/ModernTemplate';
+import ClassicTemplate from '../templates/ClassicTemplate';
 import type { TemplateProps } from '../templates/types';
-import type { ResumeContent, Theme } from '../../../types/resume.types';
+import type {
+  ResumeContent,
+  TemplateComponentKey,
+  Theme,
+} from '../../../types/resume.types';
 
 const fallbackTheme: Theme = {
   primary: '#4f46e5',
@@ -14,9 +19,15 @@ const fallbackTheme: Theme = {
 interface ResumePreviewProps {
   content?: ResumeContent;
   theme?: Theme;
+  templateKey?: TemplateComponentKey;
 }
 
-const ResumePreview = ({ content, theme }: ResumePreviewProps) => {
+const templateRegistry: Record<TemplateComponentKey, FC<TemplateProps>> = {
+  modern: ModernTemplate,
+  classic: ClassicTemplate,
+};
+
+const ResumePreview = ({ content, theme, templateKey = 'modern' }: ResumePreviewProps) => {
   const templateProps: TemplateProps = useMemo(
     () => ({
       data: content ?? { summary: 'Start writing to see the preview.' },
@@ -25,9 +36,11 @@ const ResumePreview = ({ content, theme }: ResumePreviewProps) => {
     [content, theme],
   );
 
+  const TemplateComponent = templateRegistry[templateKey] ?? ModernTemplate;
+
   return (
     <Paper variant="outlined" sx={{ p: 3, bgcolor: 'grey.50' }}>
-      <ModernTemplate {...templateProps} />
+      <TemplateComponent {...templateProps} />
     </Paper>
   );
 };

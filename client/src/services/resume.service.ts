@@ -2,10 +2,16 @@ import type {
   Resume,
   ResumeContent,
   TemplateSummary,
+  CreateResumePayload,
 } from '../types/resume.types';
 import api from './api';
 
 export const resumeService = {
+  async create(payload: CreateResumePayload): Promise<Resume> {
+    const { data } = await api.post('/resumes', payload);
+    return data.data ?? data;
+  },
+
   async list(): Promise<Resume[]> {
     const { data } = await api.get('/resumes');
     return data.data ?? data;
@@ -21,7 +27,10 @@ export const resumeService = {
     return data.data ?? data;
   },
 
-  async update(resumeId: number, payload: Partial<Resume>) {
+  async update(
+    resumeId: number,
+    payload: Partial<Resume> & { content?: ResumeContent | null },
+  ) {
     const { data } = await api.put(`/resumes/${resumeId}`, payload);
     return data.data ?? data;
   },

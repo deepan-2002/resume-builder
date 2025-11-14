@@ -5,6 +5,9 @@ import ResumeEditor from './pages/ResumeEditor';
 import Templates from './pages/Templates';
 import Login from './pages/Auth/Login';
 import './App.css';
+import Resumes from './pages/Resumes';
+import NotFound from './pages/NotFound';
+import CreateResume from './pages/CreateResume';
 
 function App() {
   return (
@@ -12,10 +15,14 @@ function App() {
       <Routes>
         <Route element={<AppLayout />}>
           <Route path="/" element={<Dashboard />} />
-          <Route path="/editor/:id" element={<ResumeEditor />} />
           <Route path="/templates" element={<Templates />} />
+          <Route path="/resumes" element={<Resumes />} />
+          <Route path="/resumes/create" element={<CreateResume />} />
+          <Route path="/resumes/:id/edit" element={<ResumeEditor />} />
+          <Route path="*" element={<NotFound />} />
         </Route>
         <Route path="/login" element={<Login />} />
+        <Route path="*" element={<NotFound />} />
       </Routes>
     </BrowserRouter>
   );
