@@ -1,3 +1,4 @@
+import { Stack, Typography } from '@mui/material';
 import { useEffect } from 'react';
 import OverviewCards from '../components/dashboard/OverviewCards';
 import useResume from '../hooks/useResume';
@@ -16,10 +17,17 @@ const Dashboard = () => {
   ];
 
   return (
-    <div className="space-y-6">
-      <h2 className="text-2xl font-semibold text-slate-900">Dashboard</h2>
+    <Stack spacing={3}>
+      <div>
+        <Typography variant="h4" color="text.primary">
+          Dashboard
+        </Typography>
+        <Typography variant="body2" color="text.secondary">
+          Quick insights across your workspace.
+        </Typography>
+      </div>
       <OverviewCards stats={stats} />
-    </div>
+    </Stack>
   );
 };
 

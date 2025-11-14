@@ -1,32 +1,86 @@
-import { NavLink } from 'react-router-dom';
+import {
+  Box,
+  Divider,
+  List,
+  ListItemButton,
+  ListItemIcon,
+  ListItemText,
+  Paper,
+  Typography,
+} from '@mui/material';
+import DashboardOutlinedIcon from '@mui/icons-material/DashboardOutlined';
+import EditOutlinedIcon from '@mui/icons-material/EditOutlined';
+import StyleOutlinedIcon from '@mui/icons-material/StyleOutlined';
+import { NavLink, useLocation } from 'react-router-dom';
 
 const links = [
-  { label: 'Dashboard', to: '/' },
-  { label: 'Resume Editor', to: '/editor/1' },
-  { label: 'Templates', to: '/templates' },
+  { label: 'Dashboard', to: '/', icon: <DashboardOutlinedIcon /> },
+  { label: 'Resume Editor', to: '/editor/1', icon: <EditOutlinedIcon /> },
+  { label: 'Templates', to: '/templates', icon: <StyleOutlinedIcon /> },
 ];
 
 const Sidebar = () => {
+  const location = useLocation();
+
   return (
-    <aside className="w-56 border-r border-slate-200 bg-slate-50 px-4 py-6">
-      <nav className="space-y-2">
-        {links.map((link) => (
-          <NavLink
-            key={link.to}
-            to={link.to}
-            className={({ isActive }) =>
-              `block rounded-md px-3 py-2 text-sm font-medium transition ${
-                isActive
-                  ? 'bg-indigo-100 text-indigo-700'
-                  : 'text-slate-600 hover:bg-white'
-              }`
-            }
-          >
-            {link.label}
-          </NavLink>
-        ))}
-      </nav>
-    </aside>
+    <Box
+      component="nav"
+      sx={{
+        width: 260,
+        flexShrink: 0,
+        borderRight: 1,
+        borderColor: 'divider',
+        bgcolor: 'background.paper',
+      }}
+    >
+      <Paper
+        square
+        elevation={0}
+        sx={{
+          minHeight: '100vh',
+          p: 3,
+          display: 'flex',
+          flexDirection: 'column',
+          gap: 3,
+        }}
+      >
+        <Box>
+          <Typography variant="subtitle2" color="text.secondary">
+            Navigation
+          </Typography>
+          <Typography variant="h6" color="text.primary">
+            Workspace
+          </Typography>
+        </Box>
+        <Divider />
+        <List disablePadding>
+          {links.map((link) => {
+            const isActive = location.pathname.startsWith(link.to);
+            return (
+              <ListItemButton
+                key={link.to}
+                component={NavLink}
+                to={link.to}
+                selected={isActive}
+                sx={{
+                  borderRadius: 2,
+                  color: isActive ? 'primary.main' : 'text.secondary',
+                  mb: 1,
+                }}
+              >
+                <ListItemIcon sx={{ color: 'inherit', minWidth: 40 }}>
+                  {link.icon}
+                </ListItemIcon>
+                <ListItemText
+                  primaryTypographyProps={{ fontWeight: 600, fontSize: 14 }}
+                  primary={link.label}
+                />
+              </ListItemButton>
+            );
+          })}
+        </List>
+      </Paper>
+    </Box>
   );
 };
 

@@ -1,3 +1,12 @@
+import {
+  Alert,
+  Box,
+  Container,
+  Paper,
+  Stack,
+  TextField,
+  Typography,
+} from '@mui/material';
 import { useState } from 'react';
 import Button from '../../components/common/Button';
 import useAuth from '../../hooks/useAuth';
@@ -13,50 +22,59 @@ const Login = () => {
   };
 
   return (
-    <div className="flex min-h-screen items-center justify-center bg-slate-100">
-      <form
-        onSubmit={handleSubmit}
-        className="w-full max-w-md space-y-4 rounded-xl border border-slate-200 bg-white p-6 shadow-sm"
-      >
-        <div>
-          <h2 className="text-2xl font-semibold text-slate-900">Welcome back</h2>
-          <p className="text-sm text-slate-500">
-            Sign in to access your dashboard.
-          </p>
-        </div>
+    <Box
+      sx={{
+        minHeight: '100vh',
+        bgcolor: 'background.default',
+        display: 'flex',
+        alignItems: 'center',
+      }}
+    >
+      <Container maxWidth="sm">
+        <Paper
+          component="form"
+          onSubmit={handleSubmit}
+          elevation={0}
+          variant="outlined"
+          sx={{ p: 4, borderRadius: 4 }}
+        >
+          <Stack spacing={3}>
+            <div>
+              <Typography variant="h4">Welcome back</Typography>
+              <Typography variant="body2" color="text.secondary">
+                Sign in to access your dashboard.
+              </Typography>
+            </div>
 
-        <div className="space-y-1">
-          <label className="text-sm font-medium text-slate-700" htmlFor="user">
-            Username
-          </label>
-          <input
-            id="user"
-            className="w-full rounded-md border border-slate-200 px-3 py-2 text-sm focus:border-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-500"
-            value={username}
-            onChange={(event) => setUsername(event.target.value)}
-          />
-        </div>
+            <TextField
+              label="Username"
+              value={username}
+              onChange={(event) => setUsername(event.target.value)}
+              fullWidth
+            />
 
-        <div className="space-y-1">
-          <label className="text-sm font-medium text-slate-700" htmlFor="pass">
-            Password
-          </label>
-          <input
-            id="pass"
-            type="password"
-            className="w-full rounded-md border border-slate-200 px-3 py-2 text-sm focus:border-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-500"
-            value={password}
-            onChange={(event) => setPassword(event.target.value)}
-          />
-        </div>
+            <TextField
+              label="Password"
+              type="password"
+              value={password}
+              onChange={(event) => setPassword(event.target.value)}
+              fullWidth
+            />
 
-        {error && <p className="text-sm text-rose-600">{error}</p>}
+            {error && <Alert severity="error">{error}</Alert>}
 
-        <Button type="submit" className="w-full justify-center" isLoading={loading}>
-          Sign in
-        </Button>
-      </form>
-    </div>
+            <Button
+              type="submit"
+              fullWidth
+              variant="primary"
+              isLoading={loading}
+            >
+              Sign in
+            </Button>
+          </Stack>
+        </Paper>
+      </Container>
+    </Box>
   );
 };
 

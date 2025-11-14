@@ -1,3 +1,4 @@
+import { Box, Paper, Stack, TextField, Typography } from '@mui/material';
 import { useEffect, useMemo, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import EditorToolbar from '../components/resume/editor/EditorToolbar';
@@ -32,8 +33,9 @@ const ResumeEditor = () => {
 
   useAutoSave(content, resumeId);
 
-  const handleSummaryChange = (event: React.ChangeEvent<HTMLTextAreaElement>) =>
-    setContent((prev) => ({ ...prev, summary: event.target.value }));
+  const handleSummaryChange = (
+    event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
+  ) => setContent((prev) => ({ ...prev, summary: event.target.value }));
 
   const placeholders = useMemo(
     () => ({
@@ -43,12 +45,12 @@ const ResumeEditor = () => {
   );
 
   return (
-    <div className="space-y-6">
+    <Stack spacing={4}>
       <div>
-        <p className="text-sm font-medium text-slate-500">Editing</p>
-        <h2 className="text-2xl font-semibold text-slate-900">
-          {placeholders.title}
-        </h2>
+        <Typography variant="caption" color="text.secondary">
+          Editing
+        </Typography>
+        <Typography variant="h4">{placeholders.title}</Typography>
       </div>
 
       <EditorToolbar
@@ -56,21 +58,29 @@ const ResumeEditor = () => {
         onExportPdf={() => currentResume && generatePdf(currentResume)}
       />
 
-      <div className="grid gap-6 lg:grid-cols-2">
-        <section className="space-y-4 rounded-xl border border-slate-200 bg-white p-6 shadow-sm">
-          <h3 className="text-lg font-semibold text-slate-900">
+      <Box
+        sx={{
+          display: 'grid',
+          gap: 4,
+          gridTemplateColumns: { xs: '1fr', lg: 'repeat(2, minmax(0, 1fr))' },
+        }}
+      >
+        <Paper variant="outlined" sx={{ p: 3 }}>
+          <Typography variant="h6" gutterBottom>
             Summary (auto-saves every 2s)
-          </h3>
-          <textarea
-            className="h-48 w-full rounded-lg border border-slate-200 p-3 text-sm text-slate-800 focus:border-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-500"
+          </Typography>
+          <TextField
+            multiline
+            minRows={8}
+            fullWidth
             value={content.summary ?? ''}
             onChange={handleSummaryChange}
             placeholder="Describe your experience, strengths, and career goals."
           />
-        </section>
+        </Paper>
         <ResumePreview content={content} theme={theme} />
-      </div>
-    </div>
+      </Box>
+    </Stack>
   );
 };
 

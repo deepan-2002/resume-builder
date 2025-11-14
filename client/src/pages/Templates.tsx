@@ -1,3 +1,12 @@
+import {
+  Alert,
+  Box,
+  Card,
+  CardContent,
+  Chip,
+  Stack,
+  Typography,
+} from '@mui/material';
 import { useEffect } from 'react';
 import { useAppDispatch, useAppSelector } from '../store/store';
 import {
@@ -17,44 +26,50 @@ const Templates = () => {
   }, [dispatch]);
 
   return (
-    <div className="space-y-4">
+    <Stack spacing={3}>
       <div>
-        <h2 className="text-2xl font-semibold text-slate-900">Templates</h2>
-        <p className="text-sm text-slate-500">
+        <Typography variant="h4" color="text.primary">
+          Templates
+        </Typography>
+        <Typography variant="body2" color="text.secondary">
           Pick a template to apply to your resume.
-        </p>
+        </Typography>
       </div>
 
-      <div className="flex flex-wrap gap-2">
+      <Stack direction="row" flexWrap="wrap" alignItems="center" gap={1}>
         {categories.map((category) => (
-          <span
-            key={category}
-            className="rounded-full bg-slate-100 px-3 py-1 text-xs font-medium text-slate-600"
-          >
-            {category}
-          </span>
+          <Chip key={category} label={category} variant="outlined" />
         ))}
-      </div>
+      </Stack>
 
-      {loading && <p className="text-sm text-slate-500">Loading templates…</p>}
+      {loading && <Alert severity="info">Loading templates…</Alert>}
 
-      <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+      <Box
+        sx={{
+          display: 'grid',
+          gap: 3,
+          gridTemplateColumns: { xs: '1fr', md: 'repeat(2, 1fr)', lg: 'repeat(3, 1fr)' },
+        }}
+      >
         {items.map((template) => (
-          <article
-            key={template.id}
-            className="rounded-xl border border-slate-200 bg-white p-4 shadow-sm"
-          >
-            <h3 className="text-lg font-semibold text-slate-900">
-              {template.name}
-            </h3>
-            <p className="text-sm text-slate-500">{template.description}</p>
-            <p className="mt-2 text-xs uppercase text-slate-400">
-              {template.category ?? 'General'}
-            </p>
-          </article>
+          <Card key={template.id} variant="outlined">
+            <CardContent>
+              <Typography variant="h6">{template.name}</Typography>
+              <Typography variant="body2" color="text.secondary">
+                {template.description}
+              </Typography>
+              <Typography
+                variant="caption"
+                color="text.disabled"
+                sx={{ display: 'block', mt: 1 }}
+              >
+                {template.category ?? 'General'}
+              </Typography>
+            </CardContent>
+          </Card>
         ))}
-      </div>
-    </div>
+      </Box>
+    </Stack>
   );
 };
 

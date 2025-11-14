@@ -1,3 +1,4 @@
+import { AppBar, Box, Toolbar, Typography } from '@mui/material';
 import useAuth from '../../hooks/useAuth';
 import Button from '../common/Button';
 
@@ -13,29 +14,40 @@ const Header = () => {
     typeof user?.email === 'string' ? (user.email as string) : undefined;
 
   return (
-    <header className="flex items-center justify-between border-b border-slate-200 bg-white px-6 py-4">
-      <div>
-        <h1 className="text-lg font-semibold text-slate-900">
-          Resume Builder
-        </h1>
-        <p className="text-sm text-slate-500">
-          Craft professional resumes with live preview and auto-save.
-        </p>
-      </div>
-      <div className="flex items-center gap-3">
+    <AppBar
+      position="static"
+      color="inherit"
+      elevation={0}
+      sx={{ borderBottom: 1, borderColor: 'divider' }}
+    >
+      <Toolbar sx={{ justifyContent: 'space-between', gap: 2 }}>
+        <Box>
+          <Typography variant="h6" color="text.primary">
+            Resume Builder
+          </Typography>
+          <Typography variant="body2" color="text.secondary">
+            Craft professional resumes with live preview and auto-save.
+          </Typography>
+        </Box>
         {isAuthenticated && (
-          <div className="text-right">
-          <p className="text-sm font-medium text-slate-900">{displayName}</p>
-          {email && <p className="text-xs text-slate-500">{email}</p>}
-          </div>
+          <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
+            <Box sx={{ textAlign: 'right' }}>
+              <Typography variant="subtitle2" color="text.primary">
+                {displayName}
+              </Typography>
+              {email && (
+                <Typography variant="caption" color="text.secondary">
+                  {email}
+                </Typography>
+              )}
+            </Box>
+            <Button variant="ghost" onClick={signOut}>
+              Sign out
+            </Button>
+          </Box>
         )}
-        {isAuthenticated && (
-          <Button variant="ghost" onClick={signOut}>
-            Sign out
-          </Button>
-        )}
-      </div>
-    </header>
+      </Toolbar>
+    </AppBar>
   );
 };
 

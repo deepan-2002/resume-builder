@@ -1,45 +1,67 @@
+import { Divider, Stack, Typography } from '@mui/material';
 import type { TemplateProps } from './types';
 
 const ModernTemplate: React.FC<TemplateProps> = ({ data, theme }) => {
   return (
-    <div
-      className="rounded-xl border border-slate-200 bg-white p-6 shadow"
-      style={{
-        borderColor: theme?.primary,
+    <Stack
+      spacing={3}
+      sx={{
+        border: 1,
+        borderColor: theme?.primary ?? 'divider',
+        borderRadius: 3,
+        bgcolor: '#fff',
+        p: 3,
+        boxShadow: 1,
       }}
     >
-      <header className="border-b pb-4">
-        <h2
-          className="text-2xl font-semibold"
-          style={{ color: theme?.primary }}
+      <div>
+        <Typography
+          variant="h5"
+          sx={{ color: theme?.primary ?? 'text.primary', fontWeight: 600 }}
         >
           {data.personalInfo?.fullName ?? 'Your Name'}
-        </h2>
-        <p className="text-sm text-slate-500">
+        </Typography>
+        <Typography variant="body2" color="text.secondary">
           {data.personalInfo?.headline ?? 'Role / Title'}
-        </p>
-      </header>
-      <section className="mt-4 space-y-2 text-sm">
-        <h3 className="text-lg font-semibold" style={{ color: theme?.text }}>
+        </Typography>
+      </div>
+
+      <Divider />
+
+      <Stack spacing={1}>
+        <Typography
+          variant="subtitle1"
+          sx={{ color: theme?.text ?? 'text.primary', fontWeight: 600 }}
+        >
           Summary
-        </h3>
-        <p className="text-slate-600">
+        </Typography>
+        <Typography variant="body2" color="text.secondary">
           {data.summary ?? 'Write a compelling professional summary.'}
-        </p>
-      </section>
-      <section className="mt-4 space-y-3 text-sm">
-        <h3 className="text-lg font-semibold" style={{ color: theme?.text }}>
+        </Typography>
+      </Stack>
+
+      <Stack spacing={2}>
+        <Typography
+          variant="subtitle1"
+          sx={{ color: theme?.text ?? 'text.primary', fontWeight: 600 }}
+        >
           Experience
-        </h3>
+        </Typography>
         {(data.experience ?? []).map((item) => (
-          <article key={item.id}>
-            <p className="font-semibold">{item.title}</p>
-            <p className="text-xs text-slate-500">{item.subtitle}</p>
-            <p className="text-slate-600">{item.description}</p>
-          </article>
+          <div key={item.id}>
+            <Typography variant="subtitle2" fontWeight={600}>
+              {item.title}
+            </Typography>
+            <Typography variant="caption" color="text.secondary">
+              {item.subtitle}
+            </Typography>
+            <Typography variant="body2" color="text.secondary">
+              {item.description}
+            </Typography>
+          </div>
         ))}
-      </section>
-    </div>
+      </Stack>
+    </Stack>
   );
 };
 

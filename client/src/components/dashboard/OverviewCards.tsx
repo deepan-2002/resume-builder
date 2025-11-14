@@ -1,22 +1,35 @@
+import { Box, Card, CardContent, Typography } from '@mui/material';
+
 interface OverviewCardsProps {
   stats: { label: string; value: string; delta?: string }[];
 }
 
 const OverviewCards = ({ stats }: OverviewCardsProps) => (
-  <div className="grid gap-4 md:grid-cols-3">
+  <Box
+    sx={{
+      display: 'grid',
+      gap: 3,
+      gridTemplateColumns: { xs: '1fr', md: 'repeat(3, minmax(0, 1fr))' },
+    }}
+  >
     {stats.map((stat) => (
-      <div
-        key={stat.label}
-        className="rounded-xl border border-slate-200 bg-white p-4 shadow-sm"
-      >
-        <p className="text-sm text-slate-500">{stat.label}</p>
-        <p className="text-2xl font-semibold text-slate-900">{stat.value}</p>
-        {stat.delta && (
-          <p className="text-xs text-emerald-600">+{stat.delta} vs last week</p>
-        )}
-      </div>
+      <Card key={stat.label} variant="outlined">
+        <CardContent>
+          <Typography variant="body2" color="text.secondary">
+            {stat.label}
+          </Typography>
+          <Typography variant="h4" color="text.primary">
+            {stat.value}
+          </Typography>
+          {stat.delta && (
+            <Typography variant="caption" color="success.main">
+              +{stat.delta} vs last week
+            </Typography>
+          )}
+        </CardContent>
+      </Card>
     ))}
-  </div>
+  </Box>
 );
 
 export default OverviewCards;

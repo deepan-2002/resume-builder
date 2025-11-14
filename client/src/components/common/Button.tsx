@@ -1,44 +1,45 @@
-import type { ButtonHTMLAttributes, PropsWithChildren } from 'react';
-import clsx from 'clsx';
+import type { ButtonProps as MuiButtonProps } from '@mui/material';
+import { Button as MuiButton, CircularProgress } from '@mui/material';
+import { forwardRef } from 'react';
 
 type ButtonVariant = 'primary' | 'secondary' | 'ghost';
 
-interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
+interface ButtonProps extends Omit<MuiButtonProps, 'variant' | 'color'> {
   variant?: ButtonVariant;
   isLoading?: boolean;
 }
 
-const variantClasses: Record<ButtonVariant, string> = {
-  primary:
-    'bg-indigo-600 text-white hover:bg-indigo-500 focus:ring-indigo-500',
-  secondary:
-    'bg-slate-100 text-slate-900 hover:bg-slate-200 focus:ring-slate-400',
-  ghost: 'bg-transparent text-slate-700 hover:bg-slate-100',
+const variantConfig: Record<
+  ButtonVariant,
+  Pick<MuiButtonProps, 'color' | 'variant'>
+> = {
+  primary: { color: 'primary', variant: 'contained' },
+  secondary: { color: 'primary', variant: 'outlined' },
+  ghost: { color: 'inherit', variant: 'text' },
 };
 
-export const Button = ({
-  children,
-  variant = 'primary',
-  className,
-  isLoading,
-  disabled,
-  ...rest
-}: PropsWithChildren<ButtonProps>) => (
-  <button
-    className={clsx(
-      'inline-flex items-center gap-2 rounded-md px-4 py-2 text-sm font-medium transition focus:outline-none focus:ring-2',
-      variantClasses[variant],
-      className,
-    )}
-    disabled={disabled || isLoading}
-    {...rest}
-  >
-    {isLoading && (
-      <span className="h-4 w-4 animate-spin rounded-full border-2 border-white border-t-transparent" />
-    )}
-    {children}
-  </button>
+const Button = forwardRef<HTMLButtonElement, ButtonProps>(
+  ({ children, variant = 'primary', isLoading, disabled, ...rest }, ref) => {
+    const { color, variant: muiVariant } = variantConfig[variant];
+
+    return (
+      <MuiButton
+        ref={ref}
+        color={color}
+        variant={muiVariant}
+        disabled={disabled || isLoading}
+        startIcon={
+          isLoading ? <CircularProgress color="inherit" size={16} /> : undefined
+        }
+        {...rest}
+      >
+        {children}
+      </MuiButton>
+    );
+  },
 );
+
+Button.displayName = 'Button';
 
 export default Button;
 

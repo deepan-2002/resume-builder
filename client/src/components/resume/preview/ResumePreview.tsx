@@ -1,3 +1,4 @@
+import { Paper } from '@mui/material';
 import { useMemo } from 'react';
 import ModernTemplate from '../templates/ModernTemplate';
 import type { TemplateProps } from '../templates/types';
@@ -25,9 +26,9 @@ const ResumePreview = ({ content, theme }: ResumePreviewProps) => {
   );
 
   return (
-    <div className="rounded-xl border border-slate-200 bg-slate-50 p-6">
+    <Paper variant="outlined" sx={{ p: 3, bgcolor: 'grey.50' }}>
       <ModernTemplate {...templateProps} />
-    </div>
+    </Paper>
   );
 };
 

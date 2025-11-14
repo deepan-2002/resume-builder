@@ -10,9 +10,12 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@emotion/react": "^11.14.0",
+    "@emotion/styled": "^11.14.1",
+    "@mui/icons-material": "^7.3.5",
+    "@mui/material": "^7.3.5",
     "@reduxjs/toolkit": "^2.4.0",
     "axios": "^1.7.9",
-    "clsx": "^2.1.1",
     "lodash.debounce": "^4.0.8",
     "react": "^19.2.0",
     "react-dom": "^19.2.0",
@@ -20,8 +23,8 @@
     "react-router-dom": "^7.0.2"
   },
   "devDependencies": {
-    "@types/lodash.debounce": "^4.0.9",
     "@eslint/js": "^9.39.1",
+    "@types/lodash.debounce": "^4.0.9",
     "@types/node": "^24.10.0",
     "@types/react": "^19.2.2",
     "@types/react-dom": "^19.2.2",
